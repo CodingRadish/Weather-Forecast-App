@@ -1,4 +1,4 @@
-# AngularJS App
+# Weather Forecast App
 
 This repository contains a very basic setup of an AngularJS app for viewing the weather forecast of a chosen city.
 
