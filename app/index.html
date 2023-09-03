@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Weather Forecast App</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="app.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.28//angular-route.min.js"></script>
+</head>
+<body ng-cloak>
+  <div ng-controller="appController">
+
+    <!-- Search bar -->
+    <div class="search">
+        <input type="text" placeholder="Search city" ng-model="searchText" ng-keypress="handleKeyPress($event)"/>
+    </div>
+
+    <!-- Displaying weather data -->
+    <div class="card" ng-if="weatherData" ng-class="{ 'expanded' : cardIsExpanded }">
+      <div class="general-data" ng-if="weatherData && weatherData.current_weather && weatherData.daily">
+        <div class="general-upper-data">
+          <div class="location">{{ city }}, {{ countryCode }} </div>
+          <div class="temperature">{{ weatherData.current_weather.temperature }}°</div>
+          <div class="weather-type">{{ weatherData.current_weather.weathercode | weatherDescription }}</div>
+          <div class="weather-type">H: {{ weatherData.daily.temperature_2m_max[0] }}° L: {{ weatherData.daily.temperature_2m_min[0] }}°</div>
+        </div>
+        <div class="general-lower-data">
+          <div class="info-container">
+            <div class="info-block-container">
+              <div class="info-block">
+                <div class="info-block-label">Percipitation</div>
+                <div class="info-block-value">{{ weatherData.daily.precipitation_sum[0] }} mm</div>
+              </div>
+            </div>
+            <div class="info-block-container">
+              <div class="info-block">
+                <div class="info-block-label">Chance of rain</div>
+                <div class="info-block-value">{{ weatherData.daily.precipitation_probability_max[0] }}%</div>
+              </div>
+            </div>
+            <div class="info-block-container">
+              <div class="info-block">
+                <div class="info-block-label">Wind</div>
+                <div class="info-block-value">{{ weatherData.current_weather.windspeed }} km/h</div>
+              </div>
+            </div>
+            <div class="info-block-container">
+              <div class="info-block">
+                <div class="info-block-label">UV Index</div>
+                <div class="info-block-value">{{ weatherData.daily.uv_index_max[0] }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="details-button" ng-click="expandCard()" ng-model="buttonText">{{ buttonText }}</button>
+      </div>
+      <div class="details-data" ng-show="showDetails" ng-if="weatherData && weatherData.hourly && weatherData.daily">
+        <div class="detials-data-label">Today's forecast</div>
+        <div class="hourly-data-container">
+          <div class="day-info-block">
+            <p>{{ weatherData.hourly.time[6] | date: 'H'}}:00</p>
+            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[6] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.hourly.time[9] | date: 'H'}}:00</p>
+            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[9] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.hourly.time[12] | date: 'H'}}:00</p>
+            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[12] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.hourly.time[15] | date: 'H'}}:00</p>
+            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[15] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.hourly.time[18] | date: 'H'}}:00</p>
+            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[18] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.hourly.time[21] | date: 'H'}}:00</p>
+            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[21] | number:0 }}°</div>
+          </div>
+        </div>
+        <div class="detials-data-label">7-day forecast</div>
+        <div class="daily-data-container">
+          <div class="day-info-block">
+            <p>Today</p>
+            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[0] | number:0 }}°</div>
+            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[0] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.daily.time[1] | date : "EEE" }}</p>
+            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[1] | number:0 }}°</div>
+            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[1] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.daily.time[2] | date : "EEE" }}</p>
+            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[2] | number:0 }}°</div>
+            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[2] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.daily.time[3] | date : "EEE" }}</p>
+            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[3] | number:0 }}°</div>
+            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[3] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.daily.time[4] | date : "EEE" }}</p>
+            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[4] | number:0 }}°</div>
+            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[4] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.daily.time[5] | date : "EEE" }}</p>
+            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[5] | number:0 }}°</div>
+            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[5] | number:0 }}°</div>
+          </div>
+          <div class="day-info-block">
+            <p>{{ weatherData.daily.time[6] | date : "EEE" }}</p>
+            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[6] | number:0 }}°</div>
+            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[6] | number:0 }}°</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <div ng-view></div>
+
+  <!--
+  <div>AngularJS seed app: v<span app-version></span></div>
+  -->
+
+  <!-- In production use:
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/x.x.x/angular.min.js"></script>
+  -->
+  <script src="app.js"></script>
+  <script src="view1/view1.js"></script>
+  <script src="view2/view2.js"></script>
+  <script src="core/version/version.js"></script>
+  <script src="core/version/version-directive.js"></script>
+  <script src="core/version/interpolate-filter.js"></script>
+  
+  <!-- Services, controllers and filters (created and added by me)-->
+  <script src="services/weather-service.js"></script>
+  <script src="controllers/app-controller.js"></script>
+  <script src="filters/weathercode-filter.js"></script>
+</body>
+</html>
