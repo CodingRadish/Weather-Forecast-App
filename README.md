@@ -7,9 +7,11 @@ This repository contains a very basic setup of an AngularJS app for viewing the 
 The app has a very simple UI implemented. The idea was to display all of the neccessary information as simply and concisely as possible.
 
 **General view**
+
 <img src="images/general.png" alt="General View">
 
 **Detailed view**
+
 <img src="images/details.png" alt="General View">
 
 ## Getting Started
