@@ -2,7 +2,7 @@
 
 This repository contains a very basic setup of an AngularJS app for viewing the weather forecast of a chosen city.
 
-<img src="images/general.png" alt="General View" width="200" height="150">
+<img src="images/general.png" alt="General View" width="200">
 
 
 ## Getting Started
