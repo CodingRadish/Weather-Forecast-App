@@ -20,6 +20,8 @@ The app has a very simple UI implemented. The idea was to display all of the nec
   <img src="images/details.png" alt="General View">
 </kbd>
 
+<br><br>
+
 ## Getting Started
 
 To get you started simply clone the repository and install the dependencies:
