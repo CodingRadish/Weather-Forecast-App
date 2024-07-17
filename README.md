@@ -6,6 +6,8 @@ This repository contains a very basic setup of an AngularJS app for viewing the 
 
 The app has a very simple UI implemented. The idea was to display all of the neccessary information as simply and concisely as possible.
 
+<br><br>
+
 **General view**
 
 <kbd>
