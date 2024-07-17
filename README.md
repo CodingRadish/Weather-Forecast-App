@@ -8,11 +8,15 @@ The app has a very simple UI implemented. The idea was to display all of the nec
 
 **General view**
 
-<img src="images/general.png" alt="General View" style="border: 2px solid black;">
+<kbd>
+  <img src="images/general.png" alt="General View">
+</kbd>
 
 **Detailed view**
 
-<img src="images/details.png" alt="General View" style="border: 2px solid black;">
+<kbd>
+  <img src="images/details.png" alt="General View">
+</kbd>
 
 ## Getting Started
 
