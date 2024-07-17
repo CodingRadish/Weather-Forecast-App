@@ -12,6 +12,7 @@ The app has a very simple UI implemented. The idea was to display all of the nec
   <img src="images/general.png" alt="General View">
 </kbd>
 
+
 **Detailed view**
 
 <kbd>
