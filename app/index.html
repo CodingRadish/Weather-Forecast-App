@@ -10,15 +10,33 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="app.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.28//angular-route.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient"></script>
 </head>
 <body ng-cloak>
   <div ng-controller="appController">
 
     <!-- Search bar -->
     <div class="search">
-        <input type="text" placeholder="Search city" ng-model="searchText" ng-keypress="handleKeyPress($event)"/>
+        <div class="search-container">
+            <input type="text" 
+                   placeholder="Search city" 
+                   ng-model="searchText" 
+                   ng-change="searchCities()"
+                   ng-keydown="handleKeyDown($event)"/>
+            <!-- Add suggestions dropdown -->
+            <div class="search-suggestions" ng-show="suggestions.length > 0">
+                <div class="suggestion-item" 
+                     ng-repeat="suggestion in suggestions"
+                     ng-click="selectCity(suggestion)"
+                     ng-class="{'selected': $index === selectedIndex}">
+                    {{suggestion.name}}, {{suggestion.country}}
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Displaying weather data -->
@@ -27,7 +45,16 @@
         <div class="general-upper-data">
           <div class="location">{{ city }}, {{ countryCode }} </div>
           <div class="temperature">{{ weatherData.current_weather.temperature }}°</div>
-          <div class="weather-type">{{ weatherData.current_weather.weathercode | weatherDescription }}</div>
+          <div class="weather-icon">
+            <i ng-if="weatherData.current_weather.weathercode == 0" class="fas fa-sun" title="Clear sky"></i>
+            <i ng-if="weatherData.current_weather.weathercode == 1 || weatherData.current_weather.weathercode == 2" class="fas fa-cloud-sun" title="Partly cloudy"></i>
+            <i ng-if="weatherData.current_weather.weathercode == 3" class="fas fa-cloud" title="Overcast"></i>
+            <i ng-if="weatherData.current_weather.weathercode >= 45 && weatherData.current_weather.weathercode <= 48" class="fas fa-smog" title="Foggy"></i>
+            <i ng-if="weatherData.current_weather.weathercode >= 51 && weatherData.current_weather.weathercode <= 57" class="fas fa-cloud-rain" title="Drizzle"></i>
+            <i ng-if="weatherData.current_weather.weathercode >= 61 && weatherData.current_weather.weathercode <= 67" class="fas fa-cloud-showers-heavy" title="Rain"></i>
+            <i ng-if="weatherData.current_weather.weathercode >= 71 && weatherData.current_weather.weathercode <= 77" class="fas fa-snowflake" title="Snow"></i>
+            <i ng-if="weatherData.current_weather.weathercode >= 95 && weatherData.current_weather.weathercode <= 99" class="fas fa-bolt" title="Thunderstorm"></i>
+          </div>
           <div class="weather-type">H: {{ weatherData.daily.temperature_2m_max[0] }}° L: {{ weatherData.daily.temperature_2m_min[0] }}°</div>
         </div>
         <div class="general-lower-data">
@@ -61,69 +88,17 @@
         <button class="details-button" ng-click="expandCard()" ng-model="buttonText">{{ buttonText }}</button>
       </div>
       <div class="details-data" ng-show="showDetails" ng-if="weatherData && weatherData.hourly && weatherData.daily">
-        <div class="detials-data-label">Today's forecast</div>
-        <div class="hourly-data-container">
-          <div class="day-info-block">
-            <p>{{ weatherData.hourly.time[6] | date: 'H'}}:00</p>
-            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[6] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.hourly.time[9] | date: 'H'}}:00</p>
-            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[9] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.hourly.time[12] | date: 'H'}}:00</p>
-            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[12] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.hourly.time[15] | date: 'H'}}:00</p>
-            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[15] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.hourly.time[18] | date: 'H'}}:00</p>
-            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[18] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.hourly.time[21] | date: 'H'}}:00</p>
-            <div class="max-temp-value">{{ weatherData.hourly.temperature_2m[21] | number:0 }}°</div>
+        <div class="forecast-section">
+          <div class="detials-data-label">24-hour forecast</div>
+          <div class="chart-container">
+            <canvas id="hourlyChart"></canvas>
           </div>
         </div>
-        <div class="detials-data-label">7-day forecast</div>
-        <div class="daily-data-container">
-          <div class="day-info-block">
-            <p>Today</p>
-            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[0] | number:0 }}°</div>
-            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[0] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.daily.time[1] | date : "EEE" }}</p>
-            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[1] | number:0 }}°</div>
-            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[1] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.daily.time[2] | date : "EEE" }}</p>
-            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[2] | number:0 }}°</div>
-            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[2] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.daily.time[3] | date : "EEE" }}</p>
-            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[3] | number:0 }}°</div>
-            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[3] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.daily.time[4] | date : "EEE" }}</p>
-            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[4] | number:0 }}°</div>
-            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[4] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.daily.time[5] | date : "EEE" }}</p>
-            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[5] | number:0 }}°</div>
-            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[5] | number:0 }}°</div>
-          </div>
-          <div class="day-info-block">
-            <p>{{ weatherData.daily.time[6] | date : "EEE" }}</p>
-            <div class="max-temp-value">{{ weatherData.daily.temperature_2m_max[6] | number:0 }}°</div>
-            <div class="min-temp-value">{{ weatherData.daily.temperature_2m_min[6] | number:0 }}°</div>
+
+        <div class="forecast-section">
+          <div class="detials-data-label">7-day forecast</div>
+          <div class="chart-container">
+            <canvas id="dailyChart"></canvas>
           </div>
         </div>
       </div>
