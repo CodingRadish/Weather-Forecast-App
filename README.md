@@ -2,17 +2,17 @@
 
 This repository contains a very basic setup of an AngularJS app for viewing the weather forecast of a chosen city.
 
-## Weather Forecast API
-
-The data is obtained through the [Open-Meteo weather forecast API](https://open-meteo.com/en/docs).
-
-## The App
+## App description
 
 The app has a very simple UI. The idea is to display all of the neccessary information as simply and concisely as possible.
 
-### Weather card
+### Weather Forecast API
 
-Weather information for a chosen city are shown in a so-called weather card.
+The weather information is obtained via [Open-Meteo weather forecast API](https://open-meteo.com/en/docs).
+
+### UI
+
+Weather information for a chosen city is shown in a card format.
 
 #### Main view
 
@@ -44,7 +44,7 @@ As well as a 7-day forecast.
 
 ### Weather icons
 
-I am using [Meteocons](https://bas.dev/work/meteocons) designed by [Bas Milius](https://bas.dev/about) as my weather icons.
+This project uses [Meteocons](https://bas.dev/work/meteocons) designed by [Bas Milius](https://bas.dev/about).
 
 ## Getting Started
 
@@ -60,6 +60,4 @@ Once you have installed the dependencies you can start the local development env
 npm start
 ```
 
-
 Once started navigate to the app at [`http://localhost:8000`](http://localhost:8000).
-
