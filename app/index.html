@@ -46,16 +46,11 @@
           <div class="location">{{ city }}, {{ countryCode }} </div>
           <div class="temperature">{{ weatherData.current_weather.temperature }}°</div>
           <div class="weather-icon">
-            <i ng-if="weatherData.current_weather.weathercode == 0" class="fas fa-sun" title="Clear sky"></i>
-            <i ng-if="weatherData.current_weather.weathercode == 1 || weatherData.current_weather.weathercode == 2" class="fas fa-cloud-sun" title="Partly cloudy"></i>
-            <i ng-if="weatherData.current_weather.weathercode == 3" class="fas fa-cloud" title="Overcast"></i>
-            <i ng-if="weatherData.current_weather.weathercode >= 45 && weatherData.current_weather.weathercode <= 48" class="fas fa-smog" title="Foggy"></i>
-            <i ng-if="weatherData.current_weather.weathercode >= 51 && weatherData.current_weather.weathercode <= 57" class="fas fa-cloud-rain" title="Drizzle"></i>
-            <i ng-if="weatherData.current_weather.weathercode >= 61 && weatherData.current_weather.weathercode <= 67" class="fas fa-cloud-showers-heavy" title="Rain"></i>
-            <i ng-if="weatherData.current_weather.weathercode >= 71 && weatherData.current_weather.weathercode <= 77" class="fas fa-snowflake" title="Snow"></i>
-            <i ng-if="weatherData.current_weather.weathercode >= 95 && weatherData.current_weather.weathercode <= 99" class="fas fa-bolt" title="Thunderstorm"></i>
+            <img ng-src="components/weather-icons/{{getWeatherIconName(weatherData.current_weather.weathercode)}}.svg" 
+                 alt="Weather condition"
+                 class="current-weather-icon">
           </div>
-          <div class="weather-type">H: {{ weatherData.daily.temperature_2m_max[0] }}° L: {{ weatherData.daily.temperature_2m_min[0] }}°</div>
+          <div class="weather-type">H: {{ weatherData.daily.temperature_2m_max[0] | number:0  }}° L: {{ weatherData.daily.temperature_2m_min[0] | number:0  }}°</div>
         </div>
         <div class="general-lower-data">
           <div class="info-container">
@@ -96,9 +91,28 @@
         </div>
 
         <div class="forecast-section">
-          <div class="detials-data-label">7-day forecast</div>
-          <div class="chart-container">
-            <canvas id="dailyChart"></canvas>
+        <div class="detials-data-label">7-day forecast</div>
+          <div class="daily-forecast">
+              <div class="daily-row" ng-repeat="day in weatherData.daily.time">
+                  <div class="daily-day">{{$index === 0 ? 'Today' : (day | date:'EEE')}}</div>
+                  <div class="daily-icon">
+                      <img ng-src="components/weather-icons/{{getWeatherIconName(weatherData.daily.weather_code[$index])}}.svg" 
+                           alt="Weather condition"
+                           class="daily-weather-icon">
+                  </div>
+                  <div class="daily-temp">
+                      <span class="daily-low">{{weatherData.daily.temperature_2m_min[$index] | number:0 }}°</span>
+                      <div class="temp-range">
+                          <div class="temp-bar" 
+                               ng-style="{
+                                   'left': ((weatherData.daily.temperature_2m_min[$index] - getMinTemp()) / (getMaxTemp() - getMinTemp()) * 100) + '%',
+                                   'width': ((weatherData.daily.temperature_2m_max[$index] - weatherData.daily.temperature_2m_min[$index]) / (getMaxTemp() - getMinTemp()) * 100) + '%'
+                               }">
+                          </div>
+                      </div>
+                      <span class="daily-high">{{ weatherData.daily.temperature_2m_max[$index] | number:0 }}°</span>
+                  </div>
+              </div>
           </div>
         </div>
       </div>

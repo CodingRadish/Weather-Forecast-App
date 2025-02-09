@@ -7,7 +7,7 @@ angular.module('myApp')
             'latitude=' + latitude +
             '&longitude=' + longitude +
             '&hourly=temperature_2m' +
-            '&daily=temperature_2m_max,temperature_2m_min,precipitation_sum,uv_index_max,precipitation_probability_max' +
+            '&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,uv_index_max,precipitation_probability_max' +
             '&timezone=auto' +
             '&current_weather=true';
         return $http.get(url);
