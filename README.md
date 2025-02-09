@@ -10,8 +10,6 @@ The data is obtained through the [Open-Meteo weather forecast API](https://open-
 
 The app has a very simple UI. The idea is to display all of the neccessary information as simply and concisely as possible.
 
-<br>
-
 ### Weather card
 
 Weather information for a chosen city are shown in a so-called weather card.
@@ -24,7 +22,7 @@ The main view displays all the essentials, so that the you get an overview at a 
   <img src="images/general.png" alt="General View">
 </kbd>
 
-<br><br>
+<br>
 
 #### Detailed view
 
@@ -36,13 +34,13 @@ The detailed view presents additional information for the 24-hour forecast with 
 
 <br><br>
 
-As well as a 7-day forecast after scrolling down.
+As well as a 7-day forecast.
 
 <kbd>
   <img src="images/details-week.png" alt="General View">
 </kbd>
 
-<br><br>
+<br>
 
 ### Weather icons
 
